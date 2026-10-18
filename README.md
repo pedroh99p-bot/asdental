@@ -1,24 +1,40 @@
 # AS Dental
 
-Site institucional estático em português brasileiro. Feito com HTML, CSS e JavaScript, sem etapa de compilação.
+Site institucional estático em português brasileiro, construído com HTML, CSS e JavaScript nativos. Não há etapa de compilação nem dependências npm.
 
 ## Visualizar localmente
 
 Abra `index.html` no navegador ou execute `npx serve .` nesta pasta.
 
-## Antes de divulgar
+## Configuração antes da publicação
 
-O site foi adaptado de um modelo demonstrativo. Atualize e confirme os dados oficiais da clínica, os serviços oferecidos, a equipe e as imagens antes de divulgar.
+Edite `images/site-config.js` somente com dados confirmados pela clínica. O arquivo centraliza:
 
-A página de contato ainda não recebe solicitações. Configure telefone, WhatsApp, e-mail, endereço, horários e um meio seguro para processar mensagens antes de oferecer agendamentos pelo site. Não colete informações de saúde por um formulário sem definir como elas serão protegidas.
+- URL oficial do Simples Dental;
+- WhatsApp, telefone, e-mail e horários;
+- endereço complementar e busca do Google Maps;
+- redes sociais e dados da pessoa jurídica/responsável técnico;
+- equipe e avaliações aprovadas para publicação;
+- ferramenta e identificador de analytics, após definir consentimento.
 
-As imagens atuais são demonstrativas. Substitua-as por fotos autorizadas da AS Dental.
+Os botões de agendamento e WhatsApp permanecem desativados enquanto seus destinos oficiais não estiverem configurados. Não adicione segredos ou dados de pacientes a esse arquivo.
+
+## Conteúdo pendente de confirmação
+
+As imagens em `images/home/` são demonstrativas, e estão identificadas como tal no site. Substitua-as por fotos autorizadas antes da publicação. O endereço do Shopping Nova América é uma referência preliminar; piso e sala não estão confirmados. A equipe, avaliações, contatos e dados profissionais também aguardam validação.
+
+Não publique dados de CRO, responsável técnico, depoimentos ou informações operacionais sem aprovação da clínica. O site não coleta dados de saúde nem implementa formulário próprio.
 
 ## Páginas
 
-- `index.html` — início
-- `about.html` — a clínica
-- `services.html` — serviços
+- `index.html` — landing page
+- `about.html` — apresentação da clínica
+- `services.html` — tratamentos
 - `team.html` — equipe
-- `contact.html` — contato
+- `contact.html` — contato e localização
 - `404.html` — página não encontrada
+- `images/site.css` — sistema visual e responsividade
+- `images/site.js` — interações, conversões e conteúdo condicional
+- `images/site-config.js` — configuração pública da clínica
+
+Navbar e footer são repetidos nas páginas estáticas; mantenha-os sincronizados ao editar a navegação.
