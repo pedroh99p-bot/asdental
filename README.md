@@ -38,3 +38,11 @@ Não publique dados de CRO, responsável técnico, depoimentos ou informações 
 - `images/site-config.js` — configuração pública da clínica
 
 Navbar e footer são repetidos nas páginas estáticas; mantenha-os sincronizados ao editar a navegação.
+
+## Pacote visual AS Dental V2
+
+Os arquivos fornecidos no pacote de assets estão em `images/asdental-v2/`. O site usa os logos propostos, ícones de tratamentos e interface, avatar ilustrado do assistente, fotografia ilustrativa para o hero e a imagem conceitual da recepção. O pacote completo, incluindo originais PNG e variantes WebP, foi preservado.
+
+As imagens de pessoas e ambientes foram geradas por IA. A recepção e a cena de atendimento estão identificadas como conceituais/ilustrativas; a equipe fictícia não é exibida como a equipe da clínica. A identidade visual do pacote é uma proposta e precisa de aprovação da AS Dental antes de ser adotada como marca definitiva.
+
+As tags Open Graph apontam para o arquivo JPG do pacote em caminho relativo. Antes da divulgação em domínio definitivo, configure a URL absoluta de `og:image` e `twitter:image` com o domínio oficial. Confirme também a licença e autorização de uso comercial dos assets.
