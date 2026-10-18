@@ -1,9 +1,14 @@
-/* Dados públicos da clínica. Complete apenas após confirmação da AS Dental. */
+/* Dados públicos da clínica. Publique somente após confirmar cada campo. */
 window.ASDentalConfig = {
   name: 'AS Dental',
+  preview: {
+    enabled: true,
+    queryParam: 'preview'
+  },
   bookingUrl: '',
-  whatsappNumber: '', // DDI + DDD + número, somente dígitos.
-  whatsappMessage: 'Olá! Gostaria de informações sobre uma avaliação na AS Dental.',
+  whatsappNumber: '5521968859080', // Número candidato; não usar sem confirmação.
+  whatsappConfirmed: false,
+  whatsappMessage: 'Olá! Gostaria de tirar algumas dúvidas sobre os tratamentos da AS Dental.',
   phone: '',
   email: '',
   hours: '',
@@ -16,6 +21,13 @@ window.ASDentalConfig = {
     suite: '',
     confirmed: false,
     mapSearchQuery: 'Shopping Nova América, Av. Pastor Martin Luther King Jr., 126, Del Castilho, Rio de Janeiro, RJ'
+  },
+  google: {
+    verified: false,
+    profileUrl: '',
+    placeId: '',
+    rating: null,
+    ratingCount: null
   },
   social: [],
   professional: {
@@ -30,7 +42,7 @@ window.ASDentalConfig = {
     testimonials: []
   },
   analytics: {
-    provider: '', // Deixe vazio até configurar ferramenta, IDs e consentimento.
+    provider: '',
     measurementId: ''
   }
 };

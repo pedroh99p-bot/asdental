@@ -4,7 +4,7 @@ Site institucional estático em português brasileiro, construído com HTML, CSS
 
 ## Visualizar localmente
 
-Abra `index.html` no navegador ou execute `npx serve .` nesta pasta.
+Execute `npx serve .` nesta pasta e abra `http://localhost:3000`; em localhost, a prévia ilustrativa é ativada automaticamente. Também é possível abrir `index.html?preview=1` para ver os exemplos em outros hosts. A faixa amarela informa que perfis, relatos e estrelas são fictícios e servem apenas para revisar o layout.
 
 ## Configuração antes da publicação
 
@@ -17,11 +17,15 @@ Edite `images/site-config.js` somente com dados confirmados pela clínica. O arq
 - equipe e avaliações aprovadas para publicação;
 - ferramenta e identificador de analytics, após definir consentimento.
 
-Os botões de agendamento e WhatsApp permanecem desativados enquanto seus destinos oficiais não estiverem configurados. Não adicione segredos ou dados de pacientes a esse arquivo.
+Em páginas públicas, os botões de agendamento e WhatsApp ficam desativados enquanto seus destinos oficiais não estiverem configurados. Na prévia, eles ficam clicáveis para demonstrar a interação, mas exibem uma mensagem e não abrem um destino pendente. O número de WhatsApp no arquivo é apenas um candidato e `whatsappConfirmed` permanece `false`. Não adicione segredos ou dados de pacientes a esse arquivo.
+
+## Prévia e publicação
+
+`images/site.js` só insere os perfis e depoimentos de exemplo em localhost ou com `?preview=1`. A avaliação Google real fica oculta até que `google.verified`, a URL da ficha e os dados confirmados sejam configurados. O perfil da equipe e os relatos também exigem as respectivas flags de aprovação e conteúdo revisado. Antes de publicar, confirme identidade visual, endereço exato, contatos, agendamento e dados profissionais com a clínica; remova `?preview=1` dos links compartilhados.
 
 ## Conteúdo pendente de confirmação
 
-As imagens em `images/home/` são demonstrativas, e estão identificadas como tal no site. Substitua-as por fotos autorizadas antes da publicação. O endereço do Shopping Nova América é uma referência preliminar; piso e sala não estão confirmados. A equipe, avaliações, contatos e dados profissionais também aguardam validação.
+As imagens de pessoas e ambientes em `images/asdental-v2/` são demonstrativas. A foto composta da equipe só aparece dentro da prévia e está identificada como ilustração. Substitua imagens por fotos autorizadas antes da publicação. O endereço do Shopping Nova América é uma referência preliminar; piso e sala não estão confirmados. A equipe, avaliações, contatos e dados profissionais também aguardam validação.
 
 Não publique dados de CRO, responsável técnico, depoimentos ou informações operacionais sem aprovação da clínica. O site não coleta dados de saúde nem implementa formulário próprio.
 
