@@ -12,7 +12,8 @@
     const host = window.location.hostname;
     const localHost = host === 'localhost' || host === '127.0.0.1' || host === '::1';
     const queryName = settings.queryParam || 'preview';
-    return localHost || new URLSearchParams(window.location.search).get(queryName) === '1';
+    const mode = new URLSearchParams(window.location.search).get(queryName);
+    return mode === '0' ? false : localHost || mode === '1';
   }
 
   function trackEvent(name, details = {}) {
@@ -74,9 +75,16 @@
     if (!preview) return;
     const banner = createElement('div', 'preview-banner');
     banner.setAttribute('role', 'status');
-    banner.innerHTML = '<span class="preview-banner-mark" aria-hidden="true">i</span><span><strong>Modo prévia</strong> · perfis, depoimentos e estrelas são composições ilustrativas, não representam pacientes ou avaliação Google real.</span>';
+    banner.innerHTML = '<span class="preview-banner-mark" aria-hidden="true">i</span><span><strong>Prévia de apresentação</strong> · perfis, relatos e estrelas ilustrativos; sem avaliações Google reais.</span>';
     document.querySelector('.site-header')?.before(banner);
     document.querySelectorAll('[data-preview-only]').forEach((item) => { item.hidden = false; });
+    document.querySelectorAll('a[href]').forEach((link) => {
+      const url = new URL(link.href, window.location.href);
+      if (url.origin === window.location.origin && /\.html$/.test(url.pathname)) {
+        url.searchParams.set(config.preview.queryParam || 'preview', '1');
+        link.href = url.href;
+      }
+    });
   }
 
   function setupConversionButtons() {
@@ -200,6 +208,7 @@
 
   function setBadgeWordmark(container) {
     const word = createElement('span', 'google-wordmark');
+    word.setAttribute('role', 'img');
     word.setAttribute('aria-label', 'Google');
     [...'Google'].forEach((letter, index) => {
       const character = createElement('span', `google-letter google-letter-${index + 1}`, letter);
@@ -211,6 +220,7 @@
 
   function setStars(container, rating, label) {
     const stars = createElement('span', 'rating-stars', '★★★★★');
+    stars.setAttribute('role', 'img');
     stars.setAttribute('aria-label', label);
     if (Number.isFinite(rating)) stars.style.setProperty('--rating-percent', `${Math.max(0, Math.min(100, rating / 5 * 100))}%`);
     container.append(stars);
@@ -262,7 +272,7 @@
       description: 'Composição demonstrativa para visualizar a apresentação de um profissional.',
       photo: 'images/asdental-v2/photography/equipe-ilustrativa.webp',
       photoAlt: 'Retrato masculino ilustrativo gerado por IA; não representa integrante da AS Dental',
-      photoPosition: '16% center'
+      photoCrop: 'male'
     },
     {
       name: 'Dra. Nome Sobrenome',
@@ -270,14 +280,18 @@
       description: 'Composição demonstrativa para visualizar a apresentação de uma profissional.',
       photo: 'images/asdental-v2/photography/equipe-ilustrativa.webp',
       photoAlt: 'Retrato feminino ilustrativo gerado por IA; não representa integrante da AS Dental',
-      photoPosition: '84% center'
+      photoCrop: 'female'
     }
   ];
 
-  const demonstrationReviews = [1, 2, 3].map((number) => ({
-    author: `Paciente exemplo 0${number}`,
+  const demonstrationReviews = [
+    'Exemplo de composição: atenção às dúvidas e clareza nas orientações ao longo do atendimento.',
+    'Texto ilustrativo para apresentar como um relato autorizado poderá ser exibido nesta seção.',
+    'Demonstração de leitura: uma experiência verificada poderá ocupar este espaço com sua fonte original.'
+  ].map((text, index) => ({
+    author: `Paciente exemplo 0${index + 1}`,
     rating: 5,
-    text: 'Este espaço demonstra como um relato autorizado poderá ser apresentado no site.',
+    text,
     source: 'Composição ilustrativa • sem vínculo com o Google'
   }));
 
@@ -301,10 +315,15 @@
         photo.width = 640;
         photo.height = 800;
         if (member.photoPosition) photo.style.objectPosition = member.photoPosition;
-        card.append(photo);
+        const portrait = createElement('div', `profile-portrait${preview ? ' is-composite' : ''}`);
+        if (preview) portrait.dataset.crop = member.photoCrop;
+        portrait.append(photo);
+        card.append(portrait);
       }
       const body = createElement('div', 'profile-card-copy');
-      body.append(createElement('span', 'profile-mark', '✦'));
+      const mark = createElement('span', 'profile-mark', '✦');
+      mark.setAttribute('aria-hidden', 'true');
+      body.append(mark);
       if (preview) body.append(createElement('span', 'demo-label', 'Perfil ilustrativo'));
       body.append(createElement('h3', '', member.name || ''));
       if (member.role) body.append(createElement('p', 'profile-role', member.role));
@@ -353,7 +372,8 @@
       const rating = Number(review.rating);
       if (Number.isFinite(rating) && rating >= 1 && rating <= 5) {
         const stars = createElement('p', 'review-stars', `${'★'.repeat(Math.round(rating))}${'☆'.repeat(5 - Math.round(rating))}`);
-        stars.setAttribute('aria-label', `Nota ${rating} de 5`);
+        stars.setAttribute('role', 'img');
+        stars.setAttribute('aria-label', preview ? 'Cinco estrelas ilustrativas; sem nota real' : `Nota ${rating} de 5`);
         card.append(stars);
       }
       card.append(createElement('blockquote', '', review.text || ''));
@@ -415,11 +435,13 @@
 
     const updateButtons = () => {
       const canScroll = hasOverflow();
+      shell.classList.toggle('is-scrollable', canScroll);
+      track.classList.add('has-cards');
+      track.classList.toggle('is-scrollable', canScroll);
       if (previous) previous.disabled = !canScroll || track.scrollLeft <= 1;
       if (next) next.disabled = !canScroll || track.scrollLeft >= track.scrollWidth - track.clientWidth - 2;
       if (dots) dots.hidden = cards.length < 2 || !canScroll;
       if (!canScroll) return;
-      const end = track.scrollWidth - track.clientWidth - 2;
       if (dots) {
         const active = Math.max(0, Math.min(cards.length - 1, Math.round(track.scrollLeft / (cards[0].getBoundingClientRect().width + (Number.parseFloat(getComputedStyle(track).columnGap) || 16)))));
         [...dots.children].forEach((dot, index) => {
@@ -460,10 +482,11 @@
     const toggle = document.querySelector('.menu-toggle');
     const backdrop = document.querySelector('[data-menu-backdrop]');
     if (!menu || !toggle || !backdrop) return;
-    const mobile = window.matchMedia('(max-width: 760px)');
+    const mobile = window.matchMedia('(max-width: 980px)');
 
     const setOpen = (open, restoreFocus = false) => {
       menu.classList.toggle('is-open', open);
+      menu.inert = mobile.matches && !open;
       toggle.classList.toggle('is-open', open);
       toggle.setAttribute('aria-expanded', String(open));
       toggle.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
@@ -473,12 +496,18 @@
       document.body.classList.toggle('drawer-open', open && mobile.matches);
       if (mobile.matches) {
         menu.setAttribute('role', open ? 'dialog' : 'navigation');
-        menu.setAttribute('aria-modal', String(open));
+        if (open) menu.setAttribute('aria-modal', 'true');
+        else menu.removeAttribute('aria-modal');
+        menu.setAttribute('aria-label', 'Menu principal');
         if (open) menu.querySelector('a, button:not(:disabled)')?.focus();
         else if (restoreFocus) toggle.focus();
+      } else {
+        menu.removeAttribute('role');
+        menu.removeAttribute('aria-modal');
       }
     };
 
+    setOpen(false);
     toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true', true));
     backdrop.addEventListener('click', () => setOpen(false, true));
     menu.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setOpen(false)));
@@ -486,7 +515,7 @@
       if (toggle.getAttribute('aria-expanded') !== 'true' || !mobile.matches) return;
       if (event.key === 'Escape') { event.preventDefault(); setOpen(false, true); return; }
       if (event.key !== 'Tab') return;
-      const focusable = [...menu.querySelectorAll('a, button:not(:disabled)')];
+      const focusable = [toggle, ...menu.querySelectorAll('a, button:not(:disabled)')];
       if (!focusable.length) return;
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
@@ -575,7 +604,7 @@
       if (event.key === 'Escape' && !panel.hidden) { event.preventDefault(); shut(); }
     });
     document.addEventListener('click', (event) => {
-      if (!panel.hidden && !event.target.closest('.assistant-widget')) shut(false);
+      if (!panel.hidden && !event.target.closest('.assistant-widget, [data-assistant-trigger]')) shut(false);
     });
     bookingButton?.addEventListener('click', () => {
       if (bookingUrl) {

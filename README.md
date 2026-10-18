@@ -6,6 +6,8 @@ Site institucional estático em português brasileiro, construído com HTML, CSS
 
 Execute `npx serve .` nesta pasta e abra `http://localhost:3000`; em localhost, a prévia ilustrativa é ativada automaticamente. Também é possível abrir `index.html?preview=1` para ver os exemplos em outros hosts. A faixa amarela informa que perfis, relatos e estrelas são fictícios e servem apenas para revisar o layout.
 
+Use `?preview=0` para conferir o comportamento de produção mesmo em localhost. Os links das páginas internas mantêm o modo de prévia quando ele está ativo. A revisão visual por seção e os cenários conferidos estão em `V3-VISUAL-REVIEW.md`.
+
 ## Configuração antes da publicação
 
 Edite `images/site-config.js` somente com dados confirmados pela clínica. O arquivo centraliza:
